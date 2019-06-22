@@ -39,9 +39,10 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if(mBound){
-            // TODO call the Download image task.
             mService.downLoadImage("https://drive.google.com/uc?export=download&id=0Bz2rNlhjsD37M2hpbEJRMlZLSGotUFZRRF9NbHhVcHFqeWpZ")
         }
+        button.setOnClickListener(View.OnClickListener { if(mBound){mService.sendNotification()} })
+
     }
 
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
         super.onStart()
         // Bind to Local service
         val intent = Intent(this,LocalService::class.java)
-        val mResultReceiver:CustomResultReceiver =  CustomResultReceiver(this)
+        val mResultReceiver =  CustomResultReceiver(this)
         intent.putExtra("receiver", mResultReceiver);
         bindService(intent,connection, Context.BIND_AUTO_CREATE)
     }
