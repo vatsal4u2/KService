@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
             val binder = service as LocalService.LocalBinder
             mService = binder.getService()
             mBound = true
-            mService.downLoadImage("https://drive.google.com/uc?export=download&id=0Bz2rNlhjsD37M2hpbEJRMlZLSGotUFZRRF9NbHhVcHFqeWpZ")
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -38,10 +37,8 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(mBound){
-            // TODO call the Download image task.
-            mService.downLoadImage("https://drive.google.com/uc?export=download&id=0Bz2rNlhjsD37M2hpbEJRMlZLSGotUFZRRF9NbHhVcHFqeWpZ")
-        }
+        button.setOnClickListener(View.OnClickListener { if(mBound){ mService.downLoadImage("https://drive.google.com/uc?export=download&id=0Bz2rNlhjsD37M2hpbEJRMlZLSGotUFZRRF9NbHhVcHFqeWpZ")} })
+
     }
 
 
@@ -49,7 +46,7 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
         super.onStart()
         // Bind to Local service
         val intent = Intent(this,LocalService::class.java)
-        val mResultReceiver:CustomResultReceiver =  CustomResultReceiver(this)
+        val mResultReceiver =  CustomResultReceiver(this)
         intent.putExtra("receiver", mResultReceiver);
         bindService(intent,connection, Context.BIND_AUTO_CREATE)
     }
@@ -74,6 +71,7 @@ class MainActivity : AppCompatActivity(),CustomResultReceiver.AppReceive {
 
             if(resultData.get("progress") == 100){
                 progressBar.visibility = View.GONE
+                mService.sendNotification()
             }
 
         }
